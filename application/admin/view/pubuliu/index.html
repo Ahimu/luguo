@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>简单瀑布流布局插件</title>
+	<link rel="stylesheet" type="text/css" href="_ADMIN_/pubuliu/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" href="_ADMIN_/pubuliu/css/default.css">
+	<link rel="stylesheet" type="text/css" href="_ADMIN_/pubuliu/css/styles.css">
+	<!--[if IE]>
+		<script src="http://libs.useso.com/js/html5shiv/3.7/html5shiv.min.js"></script>
+	<![endif]-->
+</head>
+<body >
+	<article class="htmleaf-container">
+		<header class="htmleaf-header">
+		</header>
+		<div class="wall">
+          {volist name="list" id="vo" }
+		  <div class="article">
+		    <img src="{$vo['images']['small']}" />
+		    <h2>{$vo['title']}</h2>
+		  </div>
+          {/volist}
+		</div>
+		<footer class="related">
+
+		</footer>
+	</article>
+
+	<script type="text/javascript" src="_ADMIN_/pubuliu/js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="_ADMIN_/pubuliu/js/jaliswall.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		$('.wall').jaliswall({ item: '.article' });
+	});
+	</script>
+</body>
+</html>

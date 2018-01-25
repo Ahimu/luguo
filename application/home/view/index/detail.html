@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Fly Template v3.0，基于 layui 的极简社区页面模版</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="keywords" content="fly,layui,前端社区">
+  <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
+  <link rel="stylesheet" href="_home_/layui/css/layui.css">
+  <link rel="stylesheet" href="_home_/css/global.css">
+ </head>
+ <body>
+ {include file="head" /}
+<div class="layui-hide-xs">
+  <div class="fly-panel fly-column">
+    <div class="layui-container">
+        <ul class="layui-clear">
+          <li <?php if($classid==0){echo 'class="layui-hide-xs layui-this"';}else{echo 'class="layui-hide-xs"';}?> ><a href="{:url('index')}">首页</a></li>
+          {volist name="cate" id="vo" key="k"}
+          <li <?php if($classid==$vo['id']){echo 'class="layui-this"';}?>><a href="{:url('index',['classid'=>$vo.id])}" >{$vo.title}<?php if($k==2){echo '<span class="layui-badge-dot"></span>';}?></a></li>
+          {/volist}
+          <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><span class="fly-mid"></span></li>
+          <!-- 用户登入后显示 -->
+          <?php if($user['id']){?>
+          <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="{:url('user/index')}">我发表的贴</a></li>
+          <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="{:url('user/index')}">我收藏的贴</a></li>
+          <?php }?>
+        </ul>
+
+
+        <div class="fly-column-right layui-hide-xs">
+          <span class="fly-search"><i class="layui-icon"></i></span>
+          <a href="{:url('jie/add')}" class="layui-btn">发表新帖</a>
+        </div>
+        <div class="layui-hide-sm layui-show-xs-block" style="margin-top: -10px; padding-bottom: 10px; text-align: center;">
+          <a href="{:url('jie/add')}" class="layui-btn">发表新帖</a>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="layui-container">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md8 content detail">
+      <div class="fly-panel detail-box">
+        <h1>{$content.title}</h1>
+        <div class="fly-detail-info">
+            <?php if($content['open']==0){echo '<span class="layui-badge">审核中</span>';}?>
+            <span class="layui-badge layui-bg-green fly-detail-column"><?php echo Getcatetitle($content['classid']);?></span>
+            <?php if($content['accept']==0){
+              echo '<span class="layui-badge" style="background-color: #999;">未结</span>';
+            }else{
+              echo '<span class="layui-badge" style="background-color: #5FB878;">已结</span>';
+            } ?>
+           <?php if($content['top']==1){echo  ' <span class="layui-badge layui-bg-black">置顶</span>';}?>
+           <?php if($content['flag']==1){echo ' <span class="layui-badge layui-bg-red">精帖</span>';}?>
+          <!-- <div class="fly-admin-box" data-id="123">
+            <span class="layui-btn layui-btn-xs jie-admin" type="del">删除</span>
+
+            <span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="1">置顶</span>
+            <span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="0" style="background-color:#ccc;">取消置顶</span>
+
+            <span class="layui-btn layui-btn-xs jie-admin" type="set" field="status" rank="1">加精</span>
+            <span class="layui-btn layui-btn-xs jie-admin" type="set" field="status" rank="0" style="background-color:#ccc;">取消加精</span>
+          </div> -->
+          <span class="fly-list-nums">
+            <a href="#comment"><i class="iconfont" title="回答">&#xe60c;</i> {$content.annum}</a>
+            <i class="iconfont" title="人气">&#xe60b;</i> {$content.hits}
+          </span>
+        </div>
+        <div class="detail-about">
+          <a class="fly-avatar" href="{:url('user/home',['userid'=>$content.userid])}">
+            <img src="base_path<?php  echo Getuserpic($content['userid']);?>" alt="贤心">
+          </a>
+          <div class="fly-detail-user">
+            <a href="{:url('user/home',['userid'=>$content.userid])}" class="fly-link">
+              <cite><?php echo Getuserinfo($content['userid']);?></cite>
+              <!-- <i class="iconfont icon-renzheng" title="认证信息：{{ rows.user.approve }}"></i>
+              <i class="layui-badge fly-badge-vip">VIP3</i> -->
+            </a>
+            <span>{$content.posttime|date="Y-m-d H:i:s",###}</span>
+          </div>
+          <div class="detail-hits" id="LAY_jieAdmin" data-id="123">
+            <span style="padding-right: 10px; color: #FF7200">悬赏：{$content.integral}</span>
+            <!-- <span class="layui-btn layui-btn-xs jie-admin" type="edit"><a href="{:url('edit')}">编辑此贴</a></span> -->
+          </div>
+        </div>
+        <div class="detail-body photos">
+              <p>{$content.content}</p>
+
+        </div>
+      </div>
+          <input type="hidden" name="tie_id" id="tie_id" value="{$content.id}">
+      <div class="fly-panel detail-box" id="flyReply">
+        <fieldset class="layui-elem-field layui-field-title" style="text-align: center;">
+          <legend>回帖</legend>
+        </fieldset>
+
+        <ul class="jieda" id="jieda">
+        <?php if(empty($message)){?>
+            <li class="fly-none">消灭零回复</li>
+        <?php }else{?>
+         {volist name="message" id="vo"}
+          <li data-id="{$vo.id}" class="jieda-daan">
+            <a name="item-1111111111"></a>
+            <div class="detail-about detail-about-reply">
+              <a class="fly-avatar" href="{:url('user/home',['userid'=>$vo.userid])}">
+                <img src="base_path<?php  echo Getuserpic($vo['userid']);?>" alt="<?php  echo Getuserinfo($vo['userid']);?> ">
+              </a>
+              <div class="fly-detail-user">
+                <a href="{:url('user/home',['userid'=>$vo.userid])}" class="fly-link">
+                  <cite id="user{$vo.userid}"><?php  echo Getuserinfo($vo['userid']);?></cite>
+                </a>
+                <?php if($content['userid']==$vo['userid']){echo '<span>(楼主)</span>';}?>
+                <!-- <span style="color:#5FB878">(管理员)</span>
+                <span style="color:#FF9E3F">（社区之光）</span>
+                <span style="color:#999">（该号已被封）</span> -->
+              </div>
+              <div class="detail-hits">
+                <span>{$vo.posttime|date="Y-m-d",###}</span>
+              </div>
+              <?php if($vo['accept']==1){echo ' <i class="iconfont icon-caina" title="最佳答案"></i>';}?>
+            </div>
+            <div class="detail-body jieda-body photos">
+              <p>{$vo.content}</p>
+            </div>
+            <div class="jieda-reply">
+              <span class="jieda-zan zanok" type="zan">
+                <i class="iconfont icon-zan"></i>
+                <em>66</em>
+              </span>
+              <span type="reply" onclick="reply({$vo.userid},{$vo.id});" lkk="<?php echo Getuserinfo($vo['userid']);?>">
+                <i class="iconfont icon-svgmoban53"></i>
+                回复
+              </span>
+            </div>
+          </li>
+          {/volist}
+          <?php }?>
+        </ul>
+        <input type="hidden" name="repid" id="repid">
+        <input type="hidden" name="m_id" id="m_id">
+        <div class="layui-form layui-form-pane">
+            <div class="layui-form-item layui-form-text">
+              <a name="comment"></a>
+              <div id="content" class="layui-input-block" style="width:100%;border: 1px solid #fff;"></div>
+            </div>
+            <div class="layui-form-item">
+              <input type="hidden" name="jid" value="123">
+              <button class="layui-btn" onclick="message();">提交回复</button>
+            </div>
+        </div>
+      </div>
+    </div>
+{include file="hot"/}
+  </div>
+</div>
+{include file="foot"/}
+<script src="_home_/layui/jquery.min.js"></script>
+<script src="_home_/layui/layui.js"></script>
+<script src="_home_/layui/layui.all.js"></script>
+<script type="text/javascript" src="__STATIC__/weditor/wangEditor.min.js"></script>
+    <script type="text/javascript">
+        var E = window.wangEditor;
+        var editor = new E('#content');
+        editor.customConfig.menus = [
+          'head',  // 标题
+          'bold',  // 粗体
+          'foreColor',  // 文字颜色
+          'backColor',  // 背景颜色
+          'link',  // 插入链接
+          'justify',  // 对齐方式
+          'quote',  // 引用
+          'emoticon',  // 表情
+          'image',  // 插入图片
+          'code'
+        ]
+        editor.customConfig.uploadImgShowBase64 = true ;  // 使用 base64 保存图片
+        editor.create();
+    function reply(repid,m_id){
+        var repname=$('#user'+repid).text();
+        $('#repid').val(repid);
+        $('#m_id').val(m_id);
+        var str='@'+repname;
+        editor.txt.html(str);
+        editor.customConfig.onfocus = function () {
+         console.log("onfocus");
+        }
+    }
+    function message(){
+        var userid="<?php echo $user['id'];?>";
+        if(userid==''){
+        layer.msg('请登录!', function(){});
+         return false;
+        }
+        var tie_id=$('#tie_id').val();
+        var repid=$('#repid').val();
+        var content=editor.txt.html();
+        var context=editor.txt.text();
+
+        if(context==''){
+         layer.msg('留言内容不能为空!',{icon: 5,anim: 6} , function(){
+             editor.customConfig.onfocus = function () {
+              console.log("onfocus");
+            }
+         });
+         return false;
+        }
+        if(context==null){
+         layer.msg('留言内容不能为空!',{icon: 5,anim: 6} , function(){
+             editor.customConfig.onfocus = function () {
+              console.log("onfocus");
+            }
+         });
+          return false;
+        }
+        //alert(tie_id);exit();
+        $.ajax({
+           url  : "{:url('message')}",
+           type : 'post',
+           data:{userid:userid,tie_id:tie_id,repid:repid,content:content},
+           dataType:'json',
+           success:function(data){
+               if(data.status==200){
+                    layer.msg(data.info ,{icon: 6,time:1000} , function(){
+                        window.location.reload();
+                    });
+               }else{
+                   layer.msg(data.info,{icon: 5,anim: 6} , function(){});
+               }
+           }
+       });
+    }
+</script>
+
+</body>
+</html>

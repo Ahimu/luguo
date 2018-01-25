@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>注册</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="keywords" content="fly,layui,前端社区">
+  <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
+  <link rel="stylesheet" href="_home_/layui/css/layui.css">
+  <link rel="stylesheet" href="_home_/css/global.css">
+</head>
+<body>
+
+
+{include file="head" /}
+<div class="layui-container fly-marginTop">
+  <div class="fly-panel fly-panel-user" pad20>
+    <div class="layui-tab layui-tab-brief" lay-filter="user">
+      <ul class="layui-tab-title">
+        <li><a href="login.html">登入</a></li>
+        <li class="layui-this">注册</li>
+      </ul>
+      <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
+        <div class="layui-tab-item layui-show">
+          <div class="layui-form layui-form-pane">
+              <div class="layui-form-item">
+                <label for="L_email" class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="username" name="username"  class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">将会成为您唯一的登入名</div>
+              </div>
+              <div class="layui-form-item">
+                <label for="L_username" class="layui-form-label">昵称</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="nickname" name="nickname"  class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label for="L_pass" class="layui-form-label">密码</label>
+                <div class="layui-input-inline">
+                  <input type="password" id="password" name="password" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">6到16个字符</div>
+              </div>
+              <div class="layui-form-item">
+                <label for="L_repass" class="layui-form-label">确认密码</label>
+                <div class="layui-input-inline">
+                  <input type="password" id="repassword" name="repassword" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label for="L_vercode" class="layui-form-label">验证码</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="vercode" name="vercode"  placeholder="请输入后面的验证码" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">
+                  <span style="color: #c00;"> <img src="{:captcha_src()}" alt="captcha" onclick="this.src=this.src+'?'+'id='+Math.random()" style="max-height:38px;margin-top:-8px;"/></span>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <button class="layui-btn"  id="submitl" >立即注册</button>
+              </div>
+              <div class="layui-form-item fly-form-app">
+                <span>或者直接使用社交账号快捷注册</span>
+                <a href="" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})" class="iconfont icon-qq" title="QQ登入"></a>
+                <a href="" onclick="layer.msg('正在通过微博登入', {icon:16, shade: 0.1, time:0})" class="iconfont icon-weibo" title="微博登入"></a>
+              </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{include file="foot" /}
+<script src="_home_/layui/jquery.min.js"></script>
+<script src="_home_/layui/layui.js"></script>
+<script src="_home_/layui/layui.all.js"></script>
+<script>
+$(function(){
+	$("#submitl").click(function(){
+        var name = $('#username').val();
+        var ckemail= /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
+        if (name == null || name == "") {
+            layer.msg('用户名不能为空!',  function(){});
+            $('#username').focus();
+            return false;
+        }
+        if (name.length < 2 || name.length > 20) {
+            layer.msg('邮箱地址长度应在2-20个字符之间!',  function(){});
+            $('#username').focus();
+            return false;
+        }
+        if (!ckemail.test(name)) {
+            layer.msg('邮箱格式不正确，请重新输入!',  function(){});
+            $('#username').focus();
+            return false;
+        }
+        var nickname=$('#nickname').val();
+        if (nickname == null || nickname == "") {
+            layer.msg('昵称不能为空!',  function(){});
+            $('#nickname').focus();
+            return false;
+        }
+        var password=$('#password').val();
+        if (password == null || password == "") {
+            layer.msg('密码不能为空!',  function(){});
+            $('#password').focus();
+            return false;
+        }
+
+        var repassword=$('#repassword').val();
+        if (repassword == null || repassword == "") {
+            layer.msg('确认密码不能为空!',  function(){});
+            $('#repassword').focus();
+            return false;
+        }
+        if(repassword!=password){
+            layer.msg('两次密码不一致!',  function(){});
+            $('#repassword').focus();
+            return false;
+        }
+        var vercode=$('#vercode').val();
+        if (vercode == null || vercode == "") {
+            layer.msg('验证码不能为空!',  function(){});
+            $('#vercode').focus();
+            return false;
+        }
+        //alert(name);exit();
+        $.ajax({
+           url  : "{:url('reg')}",
+           type : 'post',
+           data:{name:name,nickname:nickname,password:password,vercode:vercode},
+           dataType:'json',
+           success:function(data){
+               if(data.status==200){
+                    layer.msg(data.info ,{icon: 6,time:1000} , function(){
+                         location.href = data.url;
+                    });
+               }else{
+                   layer.msg(data.info,{icon: 5,anim: 6} , function(){});
+               }
+           }
+       });
+});
+});
+</script>
+
+</body>
+</html>

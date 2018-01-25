@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>luguo</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="_ADMIN_/layui/css/layui.css"  media="all">
+  <script src="__STATIC__/ueditor/ueditor.config.js" type="text/javascript"></script>
+  <script src="__STATIC__/ueditor/ueditor.all.min.js" type="text/javascript"></script>
+</head>
+<body>
+<blockquote class="layui-elem-quote" style="margin-top:10px;">
+    luguo-资讯管理 <a style="float:right;margin:-8px auto 0 0;"class="layui-btn" href="javascript:location.reload();">刷新</a>
+</blockquote>
+
+<div class="layui-container">
+    <div class="layui-row">
+        <form class="layui-form" action="{:url('addfield')}" method="post" id="articleform">
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">字段名</label>
+                            <div class="layui-input-block" style="width:400px;">
+                                <input type="text" id="fieldname" name="fieldname"  lay-verify="fieldname" placeholder="必填：字段名" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">字段提示</label>
+                            <div class="layui-input-block" style="width:400px;">
+                                <input type="text" name="fielddesc"  lay-verify="required"  placeholder="字段提示" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">字段选择</label>
+                            <div class="layui-input-block" style="width:400px;">
+                                <select name="fieldsel" lay-verify="required" lay-search>
+                                   <option value="int">int</option>
+                                   <option value="tinyint">tinyint</option>
+                                   <option value="smallint">smallint</option>
+                                   <option value="mediumint">mediumint</option>
+                                   <option value="bigint">bigint</option>
+                                   <option value="float">float</option>
+                                   <option value="double">double</option>
+                                   <option value="decimal">decimal</option>
+                                   <option value="tinytext">tinytext</option>
+                                   <option value="text">text</option>
+                                   <option value="mediumtext">mediumtext</option>
+                                   <option value="longtext">longtext</option>
+                                   <option value="text">char</option>
+                                   <option value="mediumtext" selected="">varchar</option>
+                                   <option value="longtext">varbinary</option>
+                                   <option value="text">datetime</option>
+                                   <option value="text">enum</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">字符长度</label>
+                            <div class="layui-input-block" style="width:400px;">
+                                <input type="text" name="fieldlong"   placeholder="字符长度" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                          <label class="layui-form-label">是否必填</label>
+                          <div class="layui-input-block">
+                            <input type="checkbox" checked="" name="kong" value="1" lay-skin="switch" lay-filter="switchTest" lay-text="必填|为空">
+                          </div>
+                        </div>
+                         <input type="hidden" name="table" value="{$table}">
+                        <div class="layui-form-item">
+                          <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                            <a href="{:url('tablelist',['table'=>$table])}" class="layui-btn layui-btn-primary">返回</a>
+                          </div>
+                        </div>
+       </form>
+    </div>
+</div>
+<script src="_ADMIN_/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use('form', function(){
+  var form = layui.form;
+
+  //自定义验证规则
+ form.verify({
+    fieldname: function(value){
+       if(!new RegExp("^[a-zA-Z\d]+$").test(value)){
+         return '必须要全字母!';
+       }
+    }
+ });
+  form.on('switch(switchTest)', function(data){
+     layer.msg('是否为空：'+ (this.checked ? '必填' : '为空'), {
+       offset: '6px'
+     });
+   });
+
+  //监听提交
+  form.on('submit(formDemo)', function(data){
+     var data=JSON.stringify(data.field);
+      $.ajax({
+         url  : "{:url('cadev')}",
+         type : 'post',
+         data:{data:data},
+         dataType:'json',
+         success:function(res){
+            var res=JSON.parse(res);
+             if(res.status==200){
+                  layer.msg(res.info ,{icon: 6,time:1000} , function(){
+                  });
+             }else{
+                 layer.msg(res.info,{icon: 5,anim: 6} , function(){});
+             }
+         }
+     });
+
+  });
+});
+
+</script>
+
+</body>
+</html>

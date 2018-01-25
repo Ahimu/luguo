@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>编辑问题</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="keywords" content="fly,layui,前端社区">
+  <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
+  <link rel="stylesheet" href="_home_/layui/css/layui.css">
+  <link rel="stylesheet" href="_home_/css/global.css">
+</head>
+<body>
+{include file="head" /}
+<div class="layui-container fly-marginTop">
+  <div class="fly-panel" pad20 style="padding-top: 5px;">
+    <!--<div class="fly-none">没有权限</div>-->
+    <div class="layui-form layui-form-pane">
+      <div class="layui-tab layui-tab-brief" lay-filter="user">
+        <ul class="layui-tab-title">
+          <li class="layui-this">编辑帖子</li>
+        </ul>
+        <div class="layui-form layui-tab-content" style="padding: 20px 0;">
+          <div class="layui-tab-item layui-show">
+              <div class="layui-row layui-col-space15 layui-form-item">
+                <div class="layui-col-md3">
+                  <label class="layui-form-label">所在专栏</label>
+                  <div class="layui-input-block">
+                    <select lay-verify="required" id="classid" name="classid" lay-filter="column">
+                      <option value="">选择专栏</option>
+                      {volist name="cate" id="vo"}
+                      <option <?php if($list['classid']==$vo['id']){echo 'selected="selected"';}?>value="{$vo.id}">{$vo.title}</option>
+                      {/volist}
+                    </select>
+                  </div>
+                </div>
+                <div class="layui-col-md9">
+                  <label for="L_title" class="layui-form-label">标题</label>
+                  <div class="layui-input-block">
+                    <input type="text" id="title" name="title" value="{$list.title}" required lay-verify="required" autocomplete="off" class="layui-input">
+                    <input type="hidden" name="id" id="id" value="{$list.id}">
+                  </div>
+                </div>
+              </div>
+
+              <div class="layui-form-item layui-form-text">
+                <div class="layui-input-block">
+                  <textarea id="content" name="content" required lay-verify="required" placeholder="详细描述" class="layui-textarea fly-editor" style="height: 260px;">{$list.content}</textarea>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-inline">
+                  <label class="layui-form-label">积分</label>
+                  <div class="layui-input-inline" style="width: 190px;">
+                    <select name="integral" id="integral">
+                      <option <?php if($list['integral']==20){echo 'selected="selected"';}?> value="20">20</option>
+                      <option <?php if($list['integral']==30){echo 'selected="selected"';}?> value="30">30</option>
+                      <option <?php if($list['integral']==50){echo 'selected="selected"';}?> value="50">50</option>
+                      <option <?php if($list['integral']==60){echo 'selected="selected"';}?> value="60">60</option>
+                      <option <?php if($list['integral']==80){echo 'selected="selected"';}?> value="80">80</option>
+                    </select>
+                  </div>
+                  <div class="layui-form-mid layui-word-aux">发表后无法更改积分</div>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label for="L_vercode" class="layui-form-label">人类验证</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="vercode" name="vercode" required lay-verify="required" placeholder="请回答后面的问题" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">
+                  <span style="color: #c00;">1+1=?</span>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <button class="layui-btn" id="submit">立即发布</button>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{include file="foot" /}
+<script src="_home_/layui/jquery.min.js"></script>
+<script src="_home_/layui/layui.js"></script>
+<script src="_home_/layui/layui.all.js"></script>
+<script type="text/javascript">
+var layedit;
+	var layeditIndex;
+	//LAYUI
+	layui.use('layedit', function(){
+		layedit = layui.layedit;
+        layedit.set({
+          uploadImage: {
+            url: "{:url('UpFiles/editUpload')}" //接口url
+            ,type: 'post' //默认post
+          }
+        });
+		layeditIndex = layedit.build('content', {
+		 tool: ['left' ,'center' ,'right' ,'link' ,'unlink' ,'face' ,'image'  ,'help']
+		}); //建立编辑器
+	});
+</script>
+<script>
+$(function(){
+	$("#submit").click(function(){
+        var classid=$('#classid').val();
+        if (classid == "") {
+            layer.msg('专栏不能为空!',  function(){});
+            $('#classid').focus();
+            return false;
+        }
+        var title = $('#title').val();
+        if (title == null || title == "") {
+            layer.msg('标题不能为空!',  function(){});
+            $('#title').focus();
+            return false;
+        }
+        var id=$('#id').val();
+        var integral=$('#integral').val();
+        var content=layedit.getContent(layeditIndex);
+        var vercode=$('#vercode').val();
+        if ( vercode != 2) {
+            layer.msg('答案错误!',  function(){});
+            $('#vercode').focus();
+            return false;
+        }
+        $.ajax({
+           url  : "{:url('edit')}",
+           type : 'post',
+           data:{classid:classid,title:title,integral:integral,content:content,id:id},
+           dataType:'json',
+           success:function(data){
+               if(data.status==200){
+                    layer.msg(data.info ,{icon: 6,time:1000} , function(){
+                        location.href = data.url;
+                    });
+               }else{
+                   layer.msg(data.info,{icon: 5,anim: 6} , function(){});
+               }
+           }
+       });
+});
+});
+
+</script>
+</body>
+</html>

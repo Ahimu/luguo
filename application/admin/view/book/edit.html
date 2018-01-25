@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>luguo</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="_ADMIN_/layui/css/layui.css"  media="all">
+</head>
+<body>
+<blockquote class="layui-elem-quote" style="margin-top:10px;">
+    luguo-资讯管理 <a style="float:right;margin:-8px auto 0 0;"class="layui-btn" href="javascript:location.reload();">刷新</a>
+</blockquote>
+
+<div class="layui-container">
+    <div class="layui-row">
+        <form class="layui-form" action="{:url('edit')}" method="post" id="articleform">
+            <input type="hidden" name="id" value="{$list.id}">
+            <div class="layui-form-item">
+            <label class="layui-form-label">分类栏目</label>
+            <div class="layui-input-block" style="width:400px;">
+              <select name="cate_id" lay-search>
+                  <option value="">请选择栏目</option>
+                  {volist name="cate" id="vo" key="k"}
+                   <option  <?php if($list['cate_id']==$vo['id']) {echo 'selected=selected""';}?> value="{$vo.id}">{$vo.cate_name}</option>
+                  {/volist}
+              </select>
+              </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-block" style="width:400px;">
+                  <input type="text" name="title" required  lay-verify="required" value="{$list.title}"  class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item" pane="">
+               <label class="layui-form-label">类　型：</label>
+               <div class="layui-input-block">
+                    <input type="radio" name="type_id" value="0" title="免费" <?php if($list['type_id']==0){echo 'checked';}?>>
+              		<input type="radio" name="type_id" value="1" title="付费" <?php if($list['type_id']==1){echo 'checked';}?>>
+              		<input type="radio" name="type_id" value="2" title="特价" <?php if($list['type_id']==2){echo 'checked';}?>>
+              		<input type="radio" name="type_id" value="3" title="包月" <?php if($list['type_id']==3){echo 'checked';}?>>
+               </div>
+             </div>
+             <div class="layui-form-item" pane="">
+                <label class="layui-form-label">状　态：</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="status_id" value="0" title="连载" <?php if($list['status_id']==0){echo 'checked';}?>>
+                    <input type="radio" name="status_id" value="1" title="完结" <?php if($list['status_id']==1){echo 'checked';}?>>
+                </div>
+              </div>
+
+              <div class="layui-form-item" pane="">
+                 <label class="layui-form-label">篇　幅：</label>
+                 <div class="layui-input-block">
+                     <input type="radio" name="bian_id" value="0" title="长篇" <?php if($list['bian_id']==0){echo 'checked';}?>>
+		             <input type="radio" name="bian_id" value="1" title="短篇" <?php if($list['bian_id']==1){echo 'checked';}?>>
+                 </div>
+               </div>
+               <div class="layui-form-item">
+               		<label class="layui-form-label">作　者：</label>
+               			<div class="layui-input-block" style="width:400px;">
+               			  <select name="author" id="author" lay-verify="required" lay-search="">
+               			        <option value="">直接选择或搜索选择</option>
+               				{volist name="author" id="vo"}
+               					<option  <?php if($list['author']==$vo['id']) {echo 'selected=selected""';}?> value="{$vo.id}" ><?php echo $vo['nickname'];?></option>
+           					{/volist}
+               			  </select>
+               			</div>
+               	</div>
+                <div class="layui-form-item">
+           			<label class="layui-form-label">授权书作者：</label>
+           			<div class="layui-input-block" style="width:400px;">
+           			  <input type="text" name="sqauthor"  class="layui-input" value="{$list.sqauthor}">
+           			</div>
+           		</div>
+
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">图书封面</label>
+                <div class="layui-inline" >
+                  <div class="layui-input-inline" style="width:400px;">
+                    <input type="text" name="picurl"  id="pic" class="layui-input" value="{$list.picurl}">
+                  </div>
+                </div>
+                <div class="layui-inline">
+                  <div class="layui-input-inline">
+                   <button type="button" class="layui-btn" id="test1">上传图片</button>
+                  </div>
+                </div>
+              </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">跳转链接</label>
+                <div class="layui-input-block" style="width:400px;">
+                  <input type="text" name="linkurl" id="linkurl" class="layui-input" value="{$list.linkurl}">
+                </div>
+              </div>
+
+             <div class="layui-form-item">
+                <label class="layui-form-label">关键词</label>
+                <div class="layui-input-block" style="width:400px;">
+                  <input type="text" name="keywords" id="keywords" class="layui-input" value="{$list.keywords}">
+                </div>
+              </div>
+
+              <div class="layui-form-item layui-form-text">
+               <label class="layui-form-label">描述</label>
+               <div class="layui-input-block" style="width:400px;">
+                 <textarea name="description" placeholder="请输入内容" class="layui-textarea">{$list.description}</textarea>
+               </div>
+             </div>
+              <div class="layui-form-item">
+              		<label class="layui-form-label">每千字收费：</label>
+              		<div class="layui-input-block" style="width:400px;">
+              		  <input type="text" name="word_price" id="word_price" class="layui-input" value="{$list.word_price}">
+              		</div>
+              </div>
+              <div class="layui-form-item">
+        			<label class="layui-form-label">自定义价格：</label>
+        			<div class="layui-input-block" style="width:500px;">
+        			  <input type="text" name="price"  class="layui-input" value="{$list.price}">
+        			</div>
+        		</div>
+
+        		<div class="layui-form-item">
+        			<label class="layui-form-label">特价：</label>
+        			<div class="layui-input-block" style="width:500px;">
+        			  <input type="text" name="teprice"  class="layui-input" value="{$list.teprice}">
+        			</div>
+        		</div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">排序</label>
+                <div class="layui-input-block" style="width:400px;">
+                  <input type="text" name="orderid" id="orderid"  class="layui-input" value="{$list.orderid}">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label">点击量</label>
+                <div class="layui-input-block" style="width:400px;">
+                  <input type="text" name="hits" id="hits" class="layui-input" value="{$list.hits}">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label">开关-默认开</label>
+                <div class="layui-input-block">
+                  <input type="checkbox" <?php if($list['open']==1){echo'checked=""';}?>  name="open" value="1" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                  <a href="{:url('index')}" class="layui-btn layui-btn-primary">返回</a>
+                </div>
+              </div>
+       </form>
+    </div>
+</div>
+<script src="_ADMIN_/layui/layui.js" charset="utf-8"></script>
+<script>
+//Demo
+layui.use('form', function(){
+  var form = layui.form;
+  form.on('switch(switchTest)', function(data){
+     layer.msg('开关checked：'+ (this.checked ? '1' : '0'), {
+       offset: '6px'
+     });
+
+   });
+  //监听提交
+  form.on('submit(formDemo)', function(data){
+     $('#articleform').submit();
+
+  });
+});
+layui.use('upload', function(){
+  var $ = layui.jquery
+  ,upload = layui.upload;
+  var uploadInst = upload.render({
+      elem: '#test1',
+      url: '{:url("UpFiles/upload")}',
+      done: function(res){
+       if(res.code > 0){
+         $('#pic').val(res.url);
+         }else{
+        return layer.msg('上传失败');
+         }
+    }
+  })
+});
+</script>
+
+</body>
+</html>

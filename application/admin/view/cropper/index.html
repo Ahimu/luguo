@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="A complete example of Cropper.">
+  <meta name="keywords" content="HTML, CSS, JS, JavaScript, jQuery plugin, image cropping, image crop, image move, image zoom, image rotate, image scale, front-end, frontend, web development">
+  <meta name="author" content="Chen Fengyuan">
+  <title>Cropper</title>
+
+ <link rel="stylesheet" href="_ADMIN_/layui/css/layui.css"  media="all">
+<link rel="stylesheet" href="_ADMIN_/cropper/exc/bootstrap.min.css">
+<link rel="stylesheet" href="_ADMIN_/cropper/exc/cropper.min.css">
+<link rel="stylesheet" href="_ADMIN_/cropper/exc/css/main.css">
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+<body>
+    <div class="container" id="crop-avatar">
+      <!-- Current avatar -->
+      <div class="avatar-view" title="Change the avatar">
+        <img src="_ADMIN_/cropper/exc/images/picture.jpg" alt="Avatar">
+      </div>
+
+      <!-- Cropping modal -->
+      <div class="modal fade" id="avatar-modal" aria-hidden="true" aria-labelledby="avatar-modal-label" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <form class="avatar-form" action="{:url('upload')}" enctype="multipart/form-data" method="post">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="avatar-modal-label">Change Avatar</h4>
+              </div>
+              <div class="modal-body">
+                <div class="avatar-body">
+
+                  <!-- Upload image and data -->
+                  <div class="avatar-upload">
+                    <input type="hidden" class="avatar-src" name="avatar_src">
+                    <input type="hidden" class="avatar-data" name="avatar_data">
+                    <label for="avatarInput">Local upload</label>
+                    <input type="file" class="avatar-input" id="avatarInput" name="avatar_file">
+                  </div>
+
+                  <!-- Crop and preview -->
+                  <div class="row">
+                    <div class="col-md-9">
+                      <div class="avatar-wrapper"></div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="avatar-preview preview-lg"></div>
+                      <div class="avatar-preview preview-md"></div>
+                      <div class="avatar-preview preview-sm"></div>
+                    </div>
+                  </div>
+
+                  <div class="row avatar-btns">
+                    <div class="col-md-9">
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-method="rotate" data-option="-90" title="Rotate -90 degrees">Rotate Left</button>
+                        <button type="button" class="btn btn-primary" data-method="rotate" data-option="-15">-15deg</button>
+                        <button type="button" class="btn btn-primary" data-method="rotate" data-option="-30">-30deg</button>
+                        <button type="button" class="btn btn-primary" data-method="rotate" data-option="-45">-45deg</button>
+                      </div>
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-method="rotate" data-option="90" title="Rotate 90 degrees">Rotate Right</button>
+                        <button type="button" class="btn btn-primary" data-method="rotate" data-option="15">15deg</button>
+                        <button type="button" class="btn btn-primary" data-method="rotate" data-option="30">30deg</button>
+                        <button type="button" class="btn btn-primary" data-method="rotate" data-option="45">45deg</button>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <button type="submit" class="btn btn-primary btn-block avatar-save">Done</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div> -->
+            </form>
+          </div>
+        </div>
+      </div><!-- /.modal -->
+
+
+      <div class="loading" aria-label="Loading" role="img" tabindex="-1"></div>
+    </div>
+    <script type="text/javascript" src="_ADMIN_/layui/jquery.min.js"></script>
+    <script type="text/javascript" src="_ADMIN_/layui/jquery-3.2.1.min.js"></script>
+    <script src="_ADMIN_/layui/layui.js" charset="utf-8"></script>
+    <script src="_ADMIN_/layui/layui.all.js" charset="utf-8"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <script src="_ADMIN_/cropper/exc/cropper.min.js"></script>
+   <script src="_ADMIN_/cropper/exc/js/main.js"></script>
+<script type="text/javascript">
+$(function () {
+        var URL = window.URL || window.webkitURL;
+        var $image = $('#image');
+        var $rotate = $('#userImg_rotate');
+        var $reUpload = $('#userImg_reUpload');
+        var $zoomOut = $('#userImg_zoomOut');
+        var $zoomIn = $('#userImg_zoomIn');
+        var $save = $('#userImg_save');
+        var croppable = false;
+        var $previews = $('.userImg_preview');
+        var options = {
+            aspectRatio: 1,
+            viewMode: 1,
+            built: function () {
+                croppable = true;
+            },
+            build: function (e) {
+                var $clone = $(this).clone();
+
+                $clone.css({
+                    display: 'block',
+                    width: '100%',
+                    minWidth: 0,
+                    minHeight: 0,
+                    maxWidth: 'none',
+                    maxHeight: 'none'
+                });
+
+                $previews.css({
+                    width: '100%',
+                    overflow: 'hidden'
+                }).html($clone);
+            },
+            crop: function (e) {
+                var imageData = $(this).cropper('getImageData');
+                var previewAspectRatio = e.width / e.height;
+
+                $previews.each(function () {
+                    var $preview = $(this);
+                    var previewWidth = $preview.width();
+                    var previewHeight = previewWidth / previewAspectRatio;
+                    var imageScaledRatio = e.width / previewWidth;
+
+                    $preview.height(previewHeight).find('img').css({
+                        width: imageData.naturalWidth / imageScaledRatio,
+                        height: imageData.naturalHeight / imageScaledRatio,
+                        marginLeft: -e.x / imageScaledRatio,
+                        marginTop: -e.y / imageScaledRatio
+                    });
+                });
+            }
+        };
+        var originalImageURL = $scope.userInfo_imgUrl;
+        var uploadedImageURL;
+
+        $scope.initCropper = function(){
+            // init
+            $image.attr('src',$scope.userInfo_imgUrl).cropper(options);
+        };
+
+        // rotate
+        $rotate.on('click', function(){
+            $image.cropper('rotate', 90);
+        });
+
+        // zoomOut
+        $zoomOut.on('click',function(){
+            $image.cropper('zoom', -0.1);
+        });
+
+        // zoomIn
+        $zoomIn.on('click',function(){
+            $image.cropper('zoom', 0.1);
+        });
+
+        // Move
+        /*$move.on('click',function(){
+            $image.cropper('setDragMode');
+        });*/
+
+        // reUpload
+        $reUpload.on('click',function(){
+            $image.cropper('destroy').attr('src', $scope.userInfo_imgUrl).cropper(options);
+            if (uploadedImageURL) {
+                URL.revokeObjectURL(uploadedImageURL);
+                uploadedImageURL = '';
+            }
+        });
+
+        // Keyboard
+        $(document.body).on('keydown', function (e) {
+
+            if (!$image.data('cropper') || this.scrollTop > 300) {
+                return;
+            }
+
+            switch (e.which) {
+                case 37:
+                    e.preventDefault();
+                    $image.cropper('move', -1, 0);
+                    break;
+
+                case 38:
+                    e.preventDefault();
+                    $image.cropper('move', 0, -1);
+                    break;
+
+                case 39:
+                    e.preventDefault();
+                    $image.cropper('move', 1, 0);
+                    break;
+
+                case 40:
+                    e.preventDefault();
+                    $image.cropper('move', 0, 1);
+                    break;
+            }
+
+        });
+
+        // 剪切和确定上传图片
+        $save.on('click',function(){
+            common.Loading.show();
+            $('#image').cropper('getCroppedCanvas').toBlob(function (blob) {
+                var formData = new FormData();
+
+                formData.append('photoFile', blob);
+
+                // 这里写入后端给你的上传接口
+                $.ajax(API_URL+'', {
+                    method: "POST",
+                    data: formData,
+                    headers: {
+                        'auth-token' : common.Cookie.get('token')
+                    },
+                    processData: false,
+                    contentType: false,
+                    success: function (res) {
+                        common.Loading.hide();
+                        common.Toast.show('头像上传成功！');
+                        try{
+                            $scope.$apply(function(){
+                                $scope.isShowUnCompleteInfoBox = false;
+                                $scope.isShowCompleteInfoBox = false;
+                                $scope.userInfo_imgUrl = res.data;
+                            })
+                        }catch(err){
+                            console.log(err)
+                        }
+                    },
+                    error: function () {
+                        common.Toast.show('头像上传失败！');
+                    }
+                });
+            });
+        })
+
+        // 上传图片，这里传本地的图片并且获取一个本地图片的路径
+        var $inputImage = $('#inputImage');
+        if (URL) {
+            $inputImage.change(function () {
+                var files = this.files;
+                var file;
+
+                if (!$image.data('cropper')) {
+                    return;
+                }
+
+                if (files && files.length) {
+                    file = files[0];
+
+                    if (/^image\/\w+$/.test(file.type)) {
+                        if (uploadedImageURL) {
+                            URL.revokeObjectURL(uploadedImageURL);
+                        }
+
+                        uploadedImageURL = URL.createObjectURL(file);
+                        $image.cropper('destroy').attr('src', uploadedImageURL).cropper(options);
+                        $inputImage.val('');
+                    } else {
+                        common.Toast.show('请选择图片再上传！')
+                    }
+                }
+            });
+        } else {
+            $inputImage.prop('disabled', true).parent().addClass('disabled');
+        }
+    });
+</script>
+</body>
+</html>

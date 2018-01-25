@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>luguo</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="_ADMIN_/layui/css/layui.css"  media="all">
+</head>
+<body>
+    <div class="layui-fluid">
+        <form class="layui-form" action="{:url('inserexcel')}" method="post" enctype="multipart/form-data">
+            <div class="layui-form">
+            	<div class="layui-form-item">
+            	    <label class="layui-form-label">选择excel表</label>
+        			<div class="layui-inline" style="width:220px;">
+        			  <input type="file" id="file" name="file" class="layui-input">
+        			</div>
+        			<div class="layui-inline">
+        			 <button  class="layui-btn">提交</button>
+        			</div>
+
+            	</div>
+            </div>
+        </form>
+    </div>
+
+
+<script type="text/javascript" src="_ADMIN_/layui/jquery.min.js"></script>
+<script src="_ADMIN_/layui/layui.js" charset="utf-8"></script>
+<script src="_ADMIN_/layui/layui.all.js" charset="utf-8"></script>
+</body>
+</html>

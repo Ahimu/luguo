@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>帐号设置</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="keywords" content="fly,layui,前端社区">
+  <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
+  <link rel="stylesheet" href="_home_/layui/css/layui.css">
+  <link rel="stylesheet" href="_home_/css/global.css">
+ </head>
+ <body>
+ {include file="head" /}
+<div class="layui-container fly-marginTop fly-user-main">
+    <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
+      <li class="layui-nav-item">
+        <a href="{:url('home')}">
+          <i class="layui-icon">&#xe609;</i>
+          我的主页
+        </a>
+      </li>
+      <li class="layui-nav-item ">
+        <a href="{:url('index')}">
+          <i class="layui-icon">&#xe612;</i>
+          用户中心
+        </a>
+      </li>
+      <li class="layui-nav-item layui-this">
+        <a href="{:url('set')}">
+          <i class="layui-icon">&#xe620;</i>
+          基本设置
+        </a>
+      </li>
+      <li class="layui-nav-item">
+        <a href="{:url('message')}">
+          <i class="layui-icon">&#xe611;</i>
+          我的消息
+        </a>
+      </li>
+    </ul>
+  <div class="site-tree-mobile layui-hide">
+    <i class="layui-icon">&#xe602;</i>
+  </div>
+  <div class="site-mobile-shade"></div>
+
+  <div class="site-tree-mobile layui-hide">
+    <i class="layui-icon">&#xe602;</i>
+  </div>
+  <div class="site-mobile-shade"></div>
+  <div class="fly-panel fly-panel-user" pad20>
+    <div class="layui-tab layui-tab-brief" lay-filter="user">
+      <ul class="layui-tab-title" id="LAY_mine">
+        <li class="layui-this" lay-id="info">我的资料</li>
+        <li lay-id="avatar">头像</li>
+        <li lay-id="pass">密码</li>
+        <!-- <li lay-id="bind">帐号绑定</li> -->
+      </ul>
+      <div class="layui-tab-content" style="padding: 20px 0;">
+        <div class="layui-form layui-form-pane layui-tab-item layui-show">
+            <input type="hidden" name="id" id="id" value="{$user.id}">
+            <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">邮箱</label>
+              <div class="layui-input-inline">
+                <input type="text" id="username" name="username" value="{$user.username}" disabled class="layui-input">
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">昵称</label>
+              <div class="layui-input-inline">
+                <input type="text" id="nickname" name="nickname" value="{$user.nickname}"  class="layui-input">
+              </div>
+              <div class="layui-inline">
+                <div class="layui-input-inline">
+                  <input type="radio" name="sex" id="sex" value="1" title="男" <?php if($user['sex']==1){echo 'checked';}?>>
+                  <input type="radio" name="sex" id="sex" value="0" title="女" <?php if($user['sex']==0){echo 'checked';}?>>
+                </div>
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label for="L_city" class="layui-form-label">城市</label>
+              <div class="layui-input-inline">
+                <input type="text" id="city" name="city" value="{$user.city}" autocomplete="off" value="" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+              <label for="L_sign" class="layui-form-label">签名</label>
+              <div class="layui-input-block">
+                <textarea placeholder="随便写些什么刷下存在感" id="sign"  name="sign" value="" autocomplete="off" class="layui-textarea" style="height: 80px;">{$user.sign}</textarea>
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <button class="layui-btn" id="submitindex">确认修改</button>
+            </div>
+          </div>
+
+          <div class="layui-form layui-form-pane layui-tab-item" >
+            <div class="layui-form-item">
+              <div class="avatar-add">
+                <p>建议尺寸168*168，支持jpg、png、gif，最大不能超过50KB</p>
+                <button type="button" class="layui-btn upload-img" id="test1">
+                <i class="layui-icon">&#xe67c;</i>上传头像
+                </button>
+                <input type="hidden" name="headpic" id="headpic" value="{$user.headpic}">
+                <?php if(empty($user['headpic'])){?>
+                <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" id="demo1">
+                <?php }else{?>
+                <img src="base_path{$user.headpic}" id="demo1">
+                <?php }?>
+                <span class="loading"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="layui-form layui-form-pane layui-tab-item">
+              <div class="layui-form-item">
+                <label for="L_nowpass" class="layui-form-label">当前密码</label>
+                <div class="layui-input-inline">
+                  <input type="password" id="nowpass" name="nowpass" required lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label for="L_pass" class="layui-form-label">新密码</label>
+                <div class="layui-input-inline">
+                  <input type="password" id="pass" name="pass" required lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">6到16个字符</div>
+              </div>
+              <div class="layui-form-item">
+                <label for="L_repass" class="layui-form-label">确认密码</label>
+                <div class="layui-input-inline">
+                  <input type="password" id="repass" name="repass" required lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <button class="layui-btn" id="submitrepass">确认修改</button>
+              </div>
+          </div>
+          <!-- <div class="layui-form layui-form-pane layui-tab-item" >
+            <ul class="app-bind">
+              <li class="fly-msg app-havebind">
+                <i class="iconfont icon-qq"></i>
+                <span>已成功绑定，您可以使用QQ帐号直接登录Fly社区，当然，您也可以</span>
+                <a href="javascript:;" class="acc-unbind" type="qq_id">解除绑定</a> -->
+
+                <!-- <a href="" onclick="layer.msg('正在绑定微博QQ', {icon:16, shade: 0.1, time:0})" class="acc-bind" type="qq_id">立即绑定</a>
+                <span>，即可使用QQ帐号登录Fly社区</span> -->
+              <!-- </li>
+              <li class="fly-msg">
+                <i class="iconfont icon-weibo"></i> -->
+                <!-- <span>已成功绑定，您可以使用微博直接登录Fly社区，当然，您也可以</span>
+                <a href="javascript:;" class="acc-unbind" type="weibo_id">解除绑定</a> -->
+
+                <!-- <a href="" class="acc-weibo" type="weibo_id"  onclick="layer.msg('正在绑定微博', {icon:16, shade: 0.1, time:0})" >立即绑定</a>
+                <span>，即可使用微博帐号登录Fly社区</span>
+              </li>
+            </ul>
+          </div> -->
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{include file="foot" /}
+<script src="_home_/layui/jquery.min.js"></script>
+<script src="_home_/layui/layui.js"></script>
+<script src="_home_/layui/layui.all.js"></script>
+<script>
+layui.use('upload', function(){
+  var $ = layui.jquery
+  ,upload = layui.upload;
+  //普通图片上传
+  var uploadInst = upload.render({
+    elem: '#test1'
+    ,url: '{:url("UpFiles/headpic")}'
+    ,before: function(obj){
+      //预读本地文件示例，不支持ie8
+      obj.preview(function(index, file, result){
+        $('#demo1').attr('src', result); //图片链接（base64）
+      });
+    }
+    ,done: function(res){
+        if(res.code > 0){
+          $('#headpic').val(res.url);
+          return layer.msg('上传成功');
+         }else{
+         return layer.msg('上传失败');
+         }
+      //上传成功
+    }
+  });
+});
+$(function(){
+	$("#submitindex").click(function(){
+        var username=$('#username').val();
+        var nickname = $('#nickname').val();
+        if (nickname == null || nickname == "") {
+            layer.msg('昵称不能为空!',  function(){});
+            $('#nickname').focus();
+            return false;
+        }
+        var sex =$('#sex').val();
+        var city=$('#city').val();
+        var sign=$('#sign').val();
+        var id=$('#id').val();
+
+        $.ajax({
+           url  : "{:url('saveuser')}",
+           type : 'post',
+           data:{username:username,nickname:nickname,sex:sex,id:id,city:city,sign:sign},
+           dataType:'json',
+           success:function(data){
+               if(data.status==200){
+                    layer.msg(data.info ,{icon: 6,time:1000} , function(){
+                        window.location.reload();
+                    });
+               }else{
+                   layer.msg(data.info,{icon: 5,anim: 6} , function(){});
+               }
+           }
+       });
+   });
+});
+$(function(){
+	$("#submitrepass").click(function(){
+        var nowpass=$('#nowpass').val();
+        if (nowpass == "") {
+            layer.msg('现在密码不能为空!',  function(){});
+            $('#nowpass').focus();
+            return false;
+        }
+        var pass = $('#pass').val();
+        if (pass == null || pass == "") {
+            layer.msg('新密码不能为空!',  function(){});
+            $('#pass').focus();
+            return false;
+        }
+        var repass = $('#repass').val();
+        if (repass =='') {
+            layer.msg('确认密码不能为空',  function(){});
+            $('#repass').focus();
+            return false;
+        }
+        if (repass !=pass) {
+            layer.msg('两次密码不一致',  function(){});
+            $('#repass').focus();
+            return false;
+        }
+        var id=$('#id').val();
+
+        $.ajax({
+           url  : "{:url('repass')}",
+           type : 'post',
+           data:{pass:pass,nowpass:nowpass,id:id,repass:repass},
+           dataType:'json',
+           success:function(data){
+               if(data.status==200){
+                    layer.msg(data.info ,{icon: 6,time:1000} , function(){
+                        window.location.reload();
+                    });
+               }else{
+                   layer.msg(data.info,{icon: 5,anim: 6} , function(){});
+               }
+           }
+       });
+   });
+});
+</script>
+
+</body>
+</html>

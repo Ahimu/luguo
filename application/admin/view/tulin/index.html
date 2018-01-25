@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>luguo</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="_ADMIN_/layui/css/layui.css"  media="all">
+
+</head>
+<body>
+    <blockquote class="layui-elem-quote" style="margin-top:10px;">
+        luguo-图灵机器人聊天接口测试测试 <a style="float:right;margin:-8px auto 0 0;"class="layui-btn" href="javascript:location.reload();">刷新</a>
+    </blockquote>
+<div class="layui-container">
+    <div class="layui-row">
+
+        <div class="layui-form">
+             <div class="layui-form-item">
+         	    <label class="layui-form-label">内容</label>
+     			<div class="layui-inline" style="width:400px;">
+     			  <input type="text" id="keyword" name="keyword"  class="layui-input" placeholder="请输入需要转换的汉字">
+     			</div>
+         	</div>
+            <div class="layui-form-item">
+               <label class="layui-form-label">回复</label>
+               <div class="layui-inline" style="width:400px;">
+                 <textarea name="description" placeholder="" id="pinyin" class="layui-textarea"></textarea>
+               </div>
+               <div class="layui-inline" style="width:400px;" id="pic">
+               </div>
+
+           </div>
+            <div class="layui-form-item">
+               <div class="layui-input-block">
+                 <button class="layui-btn" onclick="submitfanyi();">立即提交</button>
+                 <button type="reset"      onclick="formReset()" class="layui-btn layui-btn-primary">重置</button>
+             </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="_ADMIN_/layui/jquery.min.js"></script>
+<script src="_ADMIN_/layui/layui.js" charset="utf-8"></script>
+<script src="_ADMIN_/layui/layui.all.js" charset="utf-8"></script>
+<script type="text/javascript">
+        function submitfanyi() {
+            var keyword=$('#keyword').val();
+            if(keyword==''){
+                 layer.msg('请输入需要转换的汉字!',{icon: 5,anim: 6}, function(){});
+                 $('#keyword').focus();
+                 return false;
+            }
+            var str='';
+            $.ajax({
+                url  : "{:url('liaotian')}",
+                type : 'post',
+                data:{keyword:keyword},
+                dataType:'json',
+                success:function(data){
+                    if(data.code>0){
+                        $('#pinyin').val(data.text);
+                        if(data.code==200000){
+                            str='<a href="'+data.url+'" target="_blank">'+data.text+'</a>';
+                            $('#pic').html(str);
+                        }
+
+                    }else{
+                        layer.msg('参数有误!',{icon: 5,anim: 6} , function(){});
+                    }
+                }
+            });
+        }
+        function formReset(){
+            window.location.reload();
+        }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>我的消息</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="keywords" content="fly,layui,前端社区">
+  <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
+  <link rel="stylesheet" href="_home_/layui/css/layui.css">
+  <link rel="stylesheet" href="_home_/css/global.css">
+ </head>
+ <body>
+ {include file="head" /}
+
+<div class="layui-container fly-marginTop fly-user-main">
+    <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
+      <li class="layui-nav-item">
+        <a href="{:url('home')}">
+          <i class="layui-icon">&#xe609;</i>
+          我的主页
+        </a>
+      </li>
+      <li class="layui-nav-item ">
+        <a href="{:url('index')}">
+          <i class="layui-icon">&#xe612;</i>
+          用户中心
+        </a>
+      </li>
+      <li class="layui-nav-item ">
+        <a href="{:url('set')}">
+          <i class="layui-icon">&#xe620;</i>
+          基本设置
+        </a>
+      </li>
+      <li class="layui-nav-item layui-this">
+        <a href="{:url('message')}">
+          <i class="layui-icon">&#xe611;</i>
+          我的消息
+        </a>
+      </li>
+    </ul>
+
+  <div class="site-tree-mobile layui-hide">
+    <i class="layui-icon">&#xe602;</i>
+  </div>
+  <div class="site-mobile-shade"></div>
+
+  <div class="site-tree-mobile layui-hide">
+    <i class="layui-icon">&#xe602;</i>
+  </div>
+  <div class="site-mobile-shade"></div>
+  <div class="fly-panel fly-panel-user" pad20>
+	  <div class="layui-tab layui-tab-brief" lay-filter="user" id="LAY_msg" style="margin-top: 15px;">
+	    <button class="layui-btn layui-btn-danger" onclick="delallmessage({$user.id});" id="LAY_delallmsg">清空全部消息</button>
+	    <div  id="LAY_minemsg" style="margin-top: 10px;">
+            <?php if(empty($list)){echo '<div class="fly-none">您暂时没有最新消息</div>';}?>
+        <!--<div class="fly-none">您暂时没有最新消息</div>-->
+            <ul class="mine-msg">
+                {volist name="list" id="vo"}
+              <li data-id="{$vo.id}">
+                <blockquote class="layui-elem-quote">
+                <?php if($vo['userid']){?>
+                  <a href="{:url('home')}" target="_blank"><cite><?php echo Getuserinfo($vo['userid']);?></cite></a>回答了您的求解<a target="_blank" href="{:url('jie/detail',['id'=>$vo.tie_id])}"><cite><?php echo Gettietitle($vo['tie_id']);?></cite></a>
+              <?php }else{ echo Getuserinfo($vo['userid']); echo '：'.$vo['content'];}?>
+                </blockquote>
+                <p><span><?php echo pasttime($vo['posttime']);?></span><a href="javascript:;" onclick="delmessage({$vo.id});" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a></p>
+              </li>
+              {/volist}
+            </ul>
+      </div>
+	  </div>
+	</div>
+
+</div>
+
+{include file="foot" /}
+<script src="_home_/layui/jquery.min.js"></script>
+<script src="_home_/layui/layui.js"></script>
+<script src="_home_/layui/layui.all.js"></script>
+<script type="text/javascript">
+    function delmessage(id){
+        $.ajax({
+           url  : "{:url('delmessage')}",
+           type : 'post',
+           data:{id:id},
+           dataType:'json',
+           success:function(data){
+               if(data.status==200){
+                    layer.msg(data.info ,{icon: 6,time:1000} , function(){
+                        window.location.reload();
+                    });
+               }else{
+                   layer.msg(data.info,{icon: 5,anim: 6} , function(){});
+               }
+           }
+       });
+    }
+    function delallmessage(id){
+        $.ajax({
+           url  : "{:url('delallmessage')}",
+           type : 'post',
+           data:{id:id},
+           dataType:'json',
+           success:function(data){
+               if(data.status==200){
+                    layer.msg(data.info ,{icon: 6,time:1000} , function(){
+                        window.location.reload();
+                    });
+               }else{
+                   layer.msg(data.info,{icon: 5,anim: 6} , function(){});
+               }
+           }
+       });
+    }
+</script>
+</body>
+</html>

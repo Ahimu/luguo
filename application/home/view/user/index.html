@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>用户中心</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="keywords" content="fly,layui,前端社区">
+  <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
+  <link rel="stylesheet" href="_home_/layui/css/layui.css">
+  <link rel="stylesheet" href="_home_/css/global.css">
+</head>
+<body>
+{include file="head" /}
+<div class="layui-container fly-marginTop fly-user-main">
+  <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
+    <li class="layui-nav-item">
+      <a href="{:url('home')}">
+        <i class="layui-icon">&#xe609;</i>
+        我的主页
+      </a>
+    </li>
+    <li class="layui-nav-item layui-this">
+      <a href="{:url('index')}">
+        <i class="layui-icon">&#xe612;</i>
+        用户中心
+      </a>
+    </li>
+    <li class="layui-nav-item">
+      <a href="{:url('set')}">
+        <i class="layui-icon">&#xe620;</i>
+        基本设置
+      </a>
+    </li>
+    <li class="layui-nav-item">
+      <a href="{:url('message')}">
+        <i class="layui-icon">&#xe611;</i>
+        我的消息
+      </a>
+    </li>
+  </ul>
+  <div class="site-tree-mobile layui-hide">
+    <i class="layui-icon">&#xe602;</i>
+  </div>
+  <div class="site-mobile-shade"></div>
+  <div class="site-tree-mobile layui-hide">
+    <i class="layui-icon">&#xe602;</i>
+  </div>
+  <div class="site-mobile-shade"></div>
+  <div class="fly-panel fly-panel-user" pad20>
+
+    <!-- <div class="fly-msg" style="margin-top: 15px;">
+      您的邮箱尚未验证，这比较影响您的帐号安全，<a href="activate.html">立即去激活？</a>
+    </div> -->
+<style media="screen">
+.pagelist {padding:10px 0; text-align:center;}
+.pagelist span,.pagelist a{ border-radius:3px; border:1px solid #dfdfdf;display:inline-block; padding:5px 12px;}
+.pagelist a{ margin:0 3px;}
+.pagelist span.current{ background:#09F; color:#FFF; border-color:#09F; margin:0 2px;}
+.pagelist a:hover{background:#09F; color:#FFF; border-color:#09F; }
+.pagelist label{ padding-left:15px; color:#999;}
+.pagelist label b{color:red; font-weight:normal; margin:0 3px;}
+</style>
+    <div class="layui-tab layui-tab-brief" lay-filter="user">
+      <ul class="layui-tab-title" id="LAY_mine">
+        <li data-type="mine-jie"   data-url="{:url('index',['type'=>'submit'])}" class="layui-this">我发的帖（<span>{$count}</span>）</li>
+        <li data-type="collection" data-url="{:url('index',['type'=>'collection'])}" lay-id="collection">我收藏的帖（<span>{$collectionnum}</span>）</li>
+      </ul>
+      <div class="layui-tab-content" style="padding: 20px 0;">
+        <div class="layui-tab-item layui-show">
+          <ul class="mine-view jie-row">
+              {volist name="list" id="vo"}
+            <li>
+              <a class="jie-title" href="{:url('jie/detail',['id'=>$vo.id])}" target="_blank">{$vo.title}</a>
+              <i>{$vo.posttime|date="Y-m-d H:i:s",###}</i>
+              <a class="mine-edit" href="{:url('jie/edit',['id'=>$vo.id])}">编辑</a>
+              <em>{$vo.hits}阅/{$vo.annum}答</em>
+            </li>
+            {/volist}
+          </ul>
+          <div id="demo2"></div>
+        </div>
+        <div class="layui-tab-item">
+          <ul class="mine-view jie-row">
+            {volist name="collection" id="vo"}
+            <li>
+              <a class="jie-title" href="{:url('jie/detail',['id'=>$vo.id])}" target="_blank">{$vo.title}</a>
+              <i>收藏于<?php echo pasttime($vo['posttime']);?></i>
+            </li>
+            {/volist}
+          </ul>
+          <div id="demo3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{include file="foot" /}
+<script src="_home_/layui/jquery.min.js"></script>
+<script src="_home_/layui/layui.js"></script>
+<script src="_home_/layui/layui.all.js"></script>
+<script type="text/javascript">
+layui.use('laypage', function(){
+  var laypage = layui.laypage;
+
+  laypage.render({
+   elem: 'demo2'
+   ,count: {$count}
+   ,theme: '#FF5722'
+ });
+ laypage.render({
+   elem: 'demo3'
+   ,count: {$collectionnum}
+   ,theme: '#FFB800'
+ });
+});
+</script>
+</body>
+</html>

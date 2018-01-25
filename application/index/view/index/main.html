@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>layui</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="_ADMIN_/layui/css/layui.css"  media="all">
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+<style media="screen">
+p { text-indent:2em ;font-size: 16px;color: #393D49;margin-top: 10px;}
+
+    </style>
+<div class="layui-container">
+  <div class="layui-row">
+      <ul class="layui-nav layui-bg-cyan">
+        <li class="layui-nav-item layui-this"><a href="{:url('index/index')}">首页</a></li>
+        <li class="layui-nav-item"><a href="{:url('video/index')}">电影</a></li>
+        <li class="layui-nav-item"><a href="{:url('joke/index',['title'=>'段子'])}">笑话</a></li>
+        <li class="layui-nav-item"><a href="">社区</a></li>
+      </ul>
+<blockquote class="layui-elem-quote">每日一文--api示例</blockquote>
+
+
+       <pre class="layui-code">//代码区域
+           - [每日一文](#article)
+          - [特定某天一文](#someday)
+          - [随机一文](#random)
+
+          <h2 id="article">每日一文</h2>
+
+          url：[`https://interface.meiriyiwen.com/article/today?dev=1`](https://interface.meiriyiwen.com/article/today?dev=1)
+
+          json 示例：
+
+          	{
+                "data": {
+                  "date": {
+                    "curr": "20170217",
+                    "prev": "20170216",
+                    "next": "20170218"
+                  },
+                  "author": "契诃夫",
+                  "title": "散戏之后",
+                  "digest": "娜卡.戴莱尼同她母亲从戏园里回来，那天，戏园里演了一出戏名叫《叶甫盖尼.奥涅金》的戏剧。她跑到自己的屋子里去，很快脱去衣服，散开发辫，穿了一",
+                  "content": "<p>娜卡.戴莱尼同她母亲从戏园里回来，那天，戏园里演了一出戏名叫《叶甫盖尼.奥涅金》的戏剧。她跑到自己的屋子里去，很快脱去衣服，散开发辫，穿了一条短裙和衬衣，坐在桌子旁边，想仿照达吉雅娜的笔调写一封信。..........................</p>,
+                  "wc": 1963
+                }
+              }
+
+          解析：
+
+          - `date`：日期
+          	- `curr`：今日日期，`yyyyMMdd` 格式
+          	- `prev`：昨日日期，`yyyyMMdd` 格式
+          	- `next`：明日日期，`yyyyMMdd` 格式
+          - `author`：作者
+          - `titile`：标题
+          - `digest`：首段
+          - `content`：正文内容
+          - `wc`：字数(word count)
+
+          <h2 id="someday">特定某天一文</h2>
+
+          url：https://interface.meiriyiwen.com/article/day?dev=1&date= + 日期
+
+          url 示例：[`https://interface.meiriyiwen.com/article/day?dev=1&date=20170216`](https://interface.meiriyiwen.com/article/day?dev=1&date=20170216)
+
+          json 示例以及解析同[每日一文](#article)
+
+          <h2 id="random">随机一文</h2>
+
+          url：[https://interface.meiriyiwen.com/article/random?dev=1](https://interface.meiriyiwen.com/article/random?dev=1)
+
+          json 示例以及解析同[每日一文](#article)
+       </pre>
+ </div>
+</div>
+
+
+
+<script src="_ADMIN_/layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+layui.use('code', function(){
+
+  //layui.code(); 实际使用时，执行该方法即可。而此处注释是因为修饰器在别的js中已经执行过了
+});
+layui.use('element', function(){
+  var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+  //监听导航点击
+  element.on('nav(demo)', function(elem){
+    //console.log(elem)
+    layer.msg(elem.text());
+  });
+});
+</script>
+
+</body>
+</html>

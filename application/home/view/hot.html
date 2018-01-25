@@ -1,0 +1,30 @@
+<div class="layui-col-md4">
+  <dl class="fly-panel fly-list-one">
+    <dt class="fly-panel-title">本周热议</dt>
+    <?php if($hot){?>
+    {volist name="hot" id="vo"}
+    <dd>
+      <a href="{:url('index/detail',['id'=>$vo.id])}">{$vo.title}</a>
+      <span><i class="iconfont icon-pinglun1"></i> {$vo.annum}</span>
+    </dd>
+    {/volist}
+    <?php }else{?>
+    <div class="fly-none">没有相关数据</div>
+    <?php }?>
+  </dl>
+
+  <div class="fly-panel">
+    <div class="fly-panel-title">
+      这里可作为广告区域
+    </div>
+    <div class="fly-panel-main">
+      <a href="{:url('index/index')}" target="_blank" class="fly-zanzhu"  style="background-color: #5FB878;">路过社区</a>
+    </div>
+  </div>
+
+  <div class="fly-panel" style="padding: 20px 0; text-align: center;">
+    <img src="_home_/images/weixin.jpg" style="max-width: 100%;" alt="layui">
+    <p style="position: relative; color: #666;">微信扫码关注 layui 公众号</p>
+  </div>
+
+</div>

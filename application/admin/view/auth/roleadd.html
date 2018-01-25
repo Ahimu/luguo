@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>luguo</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="_ADMIN_/layui/css/layui.css"  media="all">
+</head>
+<body>
+    <blockquote class="layui-elem-quote" style="margin-top:10px;">
+        luguo-用户组管理 <a style="float:right;margin:-8px auto 0 0;"class="layui-btn" href="javascript:location.reload();">刷新</a>
+    </blockquote>
+<div class="layui-container">
+    <div class="layui-row">
+        <form class="layui-form" action="{:url('roleadd')}" method="post" id="adminaddform">
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户组</label>
+                <div class="layui-input-block" style="width:400px;">
+                  <input type="text" name="title" required  lay-verify="required"   class="layui-input">
+                </div>
+            </div>
+
+
+              <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                  <input type="checkbox" checked="" name="status" value="1" lay-skin="switch" lay-filter="switchTest" lay-text="开启|关闭">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                  <a href="{:url('role')}" class="layui-btn layui-btn-primary">返回</a>
+                </div>
+              </div>
+       </form>
+    </div>
+</div>
+<script src="_ADMIN_/layui/layui.js" charset="utf-8"></script>
+<script>
+//Demo
+layui.use('form', function(){
+  var form = layui.form;
+
+  form.on('switch(switchTest)', function(data){
+     layer.msg('开关checked：'+ (this.checked ? '1' : '0'), {
+       offset: '6px'
+     });
+
+   });
+  //监听提交
+  form.on('submit(formDemo)', function(data){
+     $('#adminaddform').submit();
+    // alert(data.field);
+    // layer.msg(JSON.stringify(data.field));
+    // return false;
+  });
+});
+</script>
+
+</body>
+</html>
